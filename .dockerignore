@@ -1,0 +1,12 @@
+**/.git
+**/.vs
+**/.vscode
+**/.cursor
+**/bin
+**/obj
+**/TestResults
+**/coverage
+**/*.user
+**/.env
+tests
+*.md

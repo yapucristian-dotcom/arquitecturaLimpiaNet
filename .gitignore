@@ -1,0 +1,29 @@
+## .NET
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio
+.vs/
+*.user
+*.userosscache
+*.suo
+*.rsuser
+
+## User secrets / local
+secrets.json
+appsettings.*.local.json
+.env
+
+## Test / coverage
+[Tt]est[Rr]esult*/
+[Cc]overage*/
+*.coverage
+*.coveragexml
+
+## OS
+Thumbs.db
+Desktop.ini
+.DS_Store

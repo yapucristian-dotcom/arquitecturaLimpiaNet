@@ -1,0 +1,58 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: miproyecto
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme_dev_only}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database:/docker-init:ro
+      - ./database/docker/init.sh:/docker-entrypoint-initdb.d/01-init.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d miproyecto"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  postgrest:
+    image: postgrest/postgrest:v12.2.12
+    environment:
+      PGRST_DB_URI: postgres://authenticator:${PGRST_DB_PASSWORD:-changeme_dev_only}@postgres:5432/miproyecto
+      PGRST_DB_SCHEMAS: api
+      PGRST_DB_ANON_ROLE: api_user
+      PGRST_DB_EXTRA_SEARCH_PATH: public
+      PGRST_OPENAPI_MODE: disabled
+      PGRST_SERVER_PORT: 3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    build:
+      context: .
+      dockerfile: src/MiProyecto.API/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      PostgREST__BaseUrl: http://postgrest:3000
+      PostgREST__TimeoutSeconds: "30"
+      Jwt__Issuer: MiProyecto
+      Jwt__Audience: MiProyecto.API
+      Jwt__RequireHttpsMetadata: "false"
+      Jwt__SigningKey: ${JWT_SIGNING_KEY:-DEV_ONLY_DO_NOT_USE_IN_PRODUCTION_CHANGE_ME}
+      Cors__AllowedOrigins__0: ${CORS_ORIGIN:-http://localhost:5173}
+      Swagger__Enabled: "true"
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      postgrest:
+        condition: service_started
+
+volumes:
+  postgres_data:

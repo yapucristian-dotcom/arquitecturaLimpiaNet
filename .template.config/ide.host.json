@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/vs-2017.3.host",
+  "name": {
+    "text": "MiEmpresa Clean Architecture PostgREST"
+  },
+  "description": {
+    "text": "API corporativa Clean Architecture con PostgreSQL Functions y PostgREST."
+  },
+  "order": 0,
+  "defaultName": "MiProyecto",
+  "supportsDocker": true
+}
