@@ -28,8 +28,10 @@ src/
     Features/{Modulo}/{Accion}/
     DependencyInjection.cs
   MiProyecto.Infrastructure/
+    Database/               # DatabaseOptions, proveedor PostgREST | SqlServer
     PostgREST/              # IPostgrestClient, PostgrestClient, PostgrestOptions
-    Persistence/            # UsuarioRepository
+    SqlServer/              # SqlConnectionFactory, traducción de errores SQL
+    Persistence/            # UsuarioRepository (PostgREST) y SqlUsuarioRepository
     Authentication/         # solo infra técnica si hace falta
     DependencyInjection.cs
   MiProyecto.API/
@@ -69,8 +71,10 @@ Prohibido: repositorios, DTOs HTTP, atributos ASP.NET, SQL, PostgREST.
 ## Infrastructure
 
 - Implementa puertos.
-- Único lugar que conoce URL, headers, JWT técnico, API key y serialización RPC.
-- `PostgrestOptions`: `BaseUrl`, `TimeoutSeconds`, `ApiKey` (opcional). Binding: sección `PostgREST`.
+- Único lugar que conoce URL, headers, JWT técnico, API key, cadena de conexión y serialización.
+- `Database`: `Provider` (`PostgREST` o `SqlServer`), `ConnectionString`, `CommandTimeoutSeconds`. Binding: sección `Database` de `appsettings.json`.
+- `PostgrestOptions`: `BaseUrl`, `TimeoutSeconds`, `ApiKey` (opcional). Binding: sección `PostgREST`. Solo se registra si el proveedor no es `SqlServer`.
+- SQL Server: procedimientos en `database/sqlserver/install.sql`. El repositorio no arma SQL ad hoc.
 
 ## API
 

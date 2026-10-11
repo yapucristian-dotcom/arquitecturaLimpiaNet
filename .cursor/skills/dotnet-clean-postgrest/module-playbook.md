@@ -8,7 +8,7 @@ Clonar el módulo `Usuarios`. No inventar otra forma de CRUD.
 2. SQL: `database/tables/{tabla}.sql` + `database/functions/fn_{modulo}_*.sql`.
 3. Application: `Features/{Modulo}/{Accion}/` (command/query, validator, handler).
 4. `Abstractions/I{Modulo}Repository` con métodos explícitos.
-5. Infrastructure: `{Modulo}Repository` → solo `IPostgrestClient`.
+5. Infrastructure: `{Modulo}Repository` → `IPostgrestClient` si el proveedor es PostgREST, o procedimiento `api.fn_{modulo}_*` si es SqlServer.
 6. Registrar repositorio en `AddInfrastructure`.
 7. API: controller delgado + atributos Swagger + `[Authorize]` / policies.
 8. Unit tests del handler y validator.

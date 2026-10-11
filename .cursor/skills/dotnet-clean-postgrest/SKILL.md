@@ -11,12 +11,14 @@ Plantilla corporativa reutilizable. Cada sistema nuevo (rentas, inventario, trá
 
 - Target: `net10.0` (LTS). Language: C#. DI nativo. Config por Options Pattern.
 - Sin Entity Framework Core como acceso a datos.
-- .NET **nunca** lee/escribe tablas. Solo PostgreSQL Functions vía PostgREST RPC (`POST /rpc/{nombre}`).
+- .NET **nunca** lee/escribe tablas. Con `PostgREST`, solo Functions vía RPC (`POST /rpc/{nombre}`). Con `SqlServer`, solo procedimientos `api.fn_*`.
 - Application **no** referencia PostgREST, HttpClient, SQL ni ASP.NET.
 - Domain **no** referencia Application, Infrastructure ni API.
 - `IPostgrestClient` vive solo en Infrastructure.
 - Repositorios **específicos por módulo**. Prohibido un `IGenericRepository`.
-- Secretos fuera del repo (User Secrets, env vars, vault).
+- La conexión de base de datos vive en `appsettings.json` (`Database:Provider` y `Database:ConnectionString`). No usar User Secrets para esa cadena.
+- Proveedor `PostgREST` (PostgreSQL) o `SqlServer` (procedimientos `api.fn_*` vía `Microsoft.Data.SqlClient`).
+- JWT y API keys siguen fuera de `appsettings.json` (User Secrets, env vars o vault).
 - No registrar passwords, JWT, API keys ni PII innecesaria.
 - Responder en español al usuario. Código e identificadores en el idioma ya usado por la plantilla (`Usuario`, `fn_usuario_obtener`).
 
@@ -24,8 +26,9 @@ Plantilla corporativa reutilizable. Cada sistema nuevo (rentas, inventario, trá
 
 ```text
 Controller → MediatR (Command/Query) → FluentValidation
-  → Handler → I{Modulo}Repository → PostgrestClient
-  → POST /rpc/fn_{modulo}_{operacion} → PostgreSQL Function → tablas
+  → Handler → I{Modulo}Repository
+      → PostgREST: POST /rpc/fn_{modulo}_{operacion} → PostgreSQL Function → tablas
+      → SqlServer: api.fn_{modulo}_{operacion} → procedimiento → tablas
 ```
 
 Transacciones de negocio = **una Function orquestadora**. No transacciones repartidas entre varios RPC desde C#.
@@ -62,7 +65,7 @@ No hardcodear nombres de sistemas reales (Rentas, Inventario) fuera del módulo 
 - [ ] Validación FluentValidation **antes** del RPC
 - [ ] Errores de PostgREST mapeados al envelope estándar
 - [ ] Tests del caso de uso (unit) y contrato HTTP si aplica
-- [ ] Sin secretos nuevos en `appsettings.json`
+- [ ] La cadena de base de datos está en `appsettings.json`. JWT y API keys no se agregan ahí.
 
 ## Recursos
 

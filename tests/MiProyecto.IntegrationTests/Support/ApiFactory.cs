@@ -23,6 +23,8 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
                 ["Jwt:Audience"] = TestJwt.Audience,
                 ["Jwt:SigningKey"] = TestJwt.SigningKey,
                 ["Jwt:RequireHttpsMetadata"] = "false",
+                ["Database:Provider"] = "PostgREST",
+                ["Database:ConnectionString"] = "Server=localhost;Database=MiProyecto;User Id=sa;Password=Your_password123;TrustServerCertificate=True;Encrypt=False",
                 ["PostgREST:BaseUrl"] = "http://localhost:3000",
                 ["PostgREST:TimeoutSeconds"] = "5",
                 ["Cors:AllowedOrigins:0"] = "http://localhost:5173",

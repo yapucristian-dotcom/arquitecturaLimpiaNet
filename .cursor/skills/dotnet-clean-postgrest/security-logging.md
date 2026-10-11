@@ -12,13 +12,19 @@ No implementar un sistema de usuarios/seguridad completo en la plantilla. JWT co
 
 ```json
 {
+  "Database": {
+    "Provider": "PostgREST",
+    "ConnectionString": "Server=localhost;Database=MiProyecto;User Id=sa;Password=Your_password123;TrustServerCertificate=True;Encrypt=False",
+    "CommandTimeoutSeconds": 30
+  },
   "PostgREST": { "BaseUrl": "http://localhost:3000", "TimeoutSeconds": 30 },
   "Jwt": { "Authority": "", "Audience": "", "RequireHttpsMetadata": true }
 }
 ```
 
-Signing key, API keys y connection strings: User Secrets / env (`Jwt__SigningKey`, `PostgREST__ApiKey`).
-`appsettings.Production.json` sin secretos. Docker: env vars.
+`Database:Provider` es `PostgREST` o `SqlServer`. La cadena de conexión se lee de `appsettings.json`, no de User Secrets.
+Signing key y API keys: User Secrets / env (`Jwt__SigningKey`, `PostgREST__ApiKey`).
+Docker con PostgreSQL fija `Database__Provider=PostgREST`.
 
 HTTPS en Production. CORS explícito por orígenes, no `AllowAnyOrigin` con credenciales.
 

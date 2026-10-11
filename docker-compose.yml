@@ -38,6 +38,7 @@ services:
       dockerfile: src/MiProyecto.API/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      Database__Provider: PostgREST
       PostgREST__BaseUrl: http://postgrest:3000
       PostgREST__TimeoutSeconds: "30"
       Jwt__Issuer: MiProyecto
